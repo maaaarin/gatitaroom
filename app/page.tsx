@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getAllTasks } from "@/lib/actions/task.actions";
 import TasksContainer from "@/components/TasksContainer";
 import Welcome from "@/components/Welcome";
+export const dynamic = 'force-dynamic';
 
 const Home = async () => {
   const tasks = await getAllTasks();
