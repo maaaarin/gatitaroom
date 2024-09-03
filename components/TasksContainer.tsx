@@ -28,11 +28,21 @@ const TasksContainer = ({ tasks }: { tasks: any }) => {
     setTaskInput(e.value);
   }
 
+  function addTaskButton(){
+    if(taskInput){
+      createTask({ name: taskInput });
+        taskInputElement.current!.value = "";
+        setTaskInput("");
+        router.refresh();
+    }
+  }
+
   useEffect(() => {
     const addTask = (e: KeyboardEvent) => {
       if (e.key === "Enter" && taskInput) {
         createTask({ name: taskInput });
         taskInputElement.current!.value = "";
+        setTaskInput("");
         router.refresh();
       }
     };
@@ -108,12 +118,12 @@ const TasksContainer = ({ tasks }: { tasks: any }) => {
             onChange={(e) => newTask(e.currentTarget)}
             ref={taskInputElement}
           />
-          <Button className="absolute right-5 bg-secondary w-20" isIconOnly>
+          <Button className="absolute right-5 bg-secondary w-20" isIconOnly onClick={addTaskButton}>
             <svg
               fill="currentColor"
               viewBox="0 0 16 16" className="text-white size-8">
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
               />
             </svg>
