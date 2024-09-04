@@ -15,9 +15,9 @@ const Home = async () => {
         alt="alt"
         width={0}
         height={0}
-        className="w-screen  absolute bottom-0"
+        className="w-screen absolute bottom-0"
       />
-      <main className="w-full h-screen max-h-screen flex justify-end items-center flex-col relative">
+      <main className="w-full h-screen flex justify-end items-center flex-col relative">
         <div className="flex flex-col items-center text-black py-12 relative">
           <h1 className="text-4xl">Gatita's Room</h1>
           <h3 className="text-2xl">My petit chat</h3>

@@ -7,7 +7,6 @@ import { clsx } from "clsx";
 const Welcome = () => {
   const [entered, setEntered] = React.useState(false);
 
-
   function enteredClick(){
     const audio = new Audio("/assets/welcome_sfx.mp3");
     setEntered(true)
