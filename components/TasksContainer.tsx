@@ -1,200 +1,204 @@
 "use client";
-import { createTask } from "@/lib/actions/task.actions";
 import Image from "next/image";
-import React, { useEffect } from "react";
-import { Task as TaskType } from "@/types";
-import Task from "./Task";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
+import { Task, TaskStatus } from "@/types";
+import clsx from "clsx";
+import { removeTask, updateTask } from "@/lib/actions/task.actions";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
-const TasksContainer = ({ tasks }: { tasks: any }) => {
+const TasksContainer = ({ tasksInit }: { tasksInit: TaskStatus[] }) => {
+  const [isBrowser, setIsBrowser] = useState(false);
   const router = useRouter();
-  const [taskCompleted, setTaskCompleted] = React.useState(false);
-  const [taskInput, setTaskInput] = React.useState("");
-
-  // Add new task
-  useEffect(() => {
-    if (taskCompleted) {
-      setTimeout(() => {
-        document.getElementById("confetti")?.remove();
-        setTaskCompleted(false);
-      }, 3000);
-    }
-  }, [taskCompleted]);
-
-  const taskInputElement = React.useRef<HTMLInputElement>(null);
-
-  function newTask(e: HTMLInputElement) {
-    setTaskInput(e.value);
-  }
-
-  function addTaskButton() {
-    if (taskInput) {
-      createTask({ name: taskInput });
-      taskInputElement.current!.value = "";
-      setTaskInput("");
-      router.refresh();
-    }
-  }
 
   useEffect(() => {
-    const addTask = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && taskInput) {
-        createTask({ name: taskInput });
-        taskInputElement.current!.value = "";
-        setTaskInput("");
-        router.refresh();
+    if (typeof window !== "undefined") {
+      setIsBrowser(true);
+    }
+  }, []);
+
+  const [tasks, setTasks] = React.useState<TaskStatus[]>(tasksInit);
+
+  useEffect(() => {
+    setTasks(tasksInit);
+  }, [tasksInit]);
+
+  function taskDone() {
+    const audio = new Audio("/assets/audio/task_done.mp3");
+    audio.play();
+  }
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    const newTasks = [...tasks];
+    // Drag on another area
+    if (source.droppableId !== destination.droppableId) {
+      const oldDroppableIndex = newTasks.findIndex(
+        (x) => x.status == source.droppableId
+      );
+      const newDroppableIndex = newTasks.findIndex(
+        (x) => x.status == destination.droppableId
+      );
+      const [item] = newTasks[oldDroppableIndex].tasks.splice(source.index, 1);
+      newTasks[newDroppableIndex].tasks.splice(destination.index, 0, item);
+      setTasks([...newTasks]);
+      // Task done successfully
+      if (destination.droppableId === "done") {
+        taskDone();
       }
-    };
-    window.addEventListener("keydown", addTask);
-    return () => {
-      window.removeEventListener("keydown", addTask);
-    };
-  }, [taskInput]);
-
-  const [isTaskCompleted, setIsTaskCompleted] = React.useState(false);
-
-  // Check if there's tasks completed
-  function checkTasksCompleted() {
-    const completedTasks = tasks.some((task: TaskType) => task.completed);
-    if (completedTasks) {
-      setIsTaskCompleted(true);
+      // Update database
+      const updatingTask = async () => {
+        const updatedTask = await updateTask(
+          source.index,
+          source.droppableId,
+          destination.index,
+          destination.droppableId
+        );
+      };
+      updatingTask();
     } else {
-      setIsTaskCompleted(false);
+      // Drag on same area
+      const droppableIndex = newTasks.findIndex(
+        (x) => x.status == source.droppableId
+      );
+      const [item] = newTasks[droppableIndex].tasks.splice(source.index, 1);
+      newTasks[droppableIndex].tasks.splice(destination.index, 0, item);
+      setTasks([...newTasks]);
+      // Update database
+      const updatingTask = async () => {
+        const taskUpdate = await updateTask(
+          source.index,
+          source.droppableId,
+          destination.index,
+          destination.droppableId
+        );
+      };
+      updatingTask();
     }
+  };
+
+  function taskRemove(taskStatus: string, taskId: string){
+    removeTask(taskStatus, taskId);
+    router.refresh();
   }
-
-  useEffect(() => {
-    checkTasksCompleted();
-    console.log(isTaskCompleted);
-    console.log(tasks);
-  }, [tasks]);
-
-  // Check All Tasks Completed
-  // function checkAllTasksCompleted() {
-  //   const completedTasks = tasks.filter(task => task.completed);
-  //   if(completedTasks.length === tasks.length) {
-  //     setTaskCompleted(true);
-  //   }
-  // }
 
   return (
-    <>
-    <section className="w-2/5 flex-auto overflow-hidden bg-white rounded-t-3xl">
-      {/* Add task */}
-      <div className="flex h-16 items-center w-full relative">
-        <input
-          type="text"
-          placeholder="Add your task..."
-          className="size-full bg-zinc-200 rounded-t-3xl indent-5 border-none outline-none"
-          onChange={(e) => newTask(e.currentTarget)}
-          ref={taskInputElement}
+    <DragDropContext onDragEnd={onDragEnd}>
+      <section className="w-3/4 h-auto bg-white rounded-3xl border-secondary border-2 flex pt-5 relative ">
+        {/* Tasks */}
+        <div className="size-full flex overflow-y-auto">
+          {isBrowser
+            ? tasks.map((tasksCategory: any, index: number) => {
+                return (
+                  <Droppable
+                    droppableId={tasksCategory.status}
+                    type="column"
+                    key={index}>
+                    {(provided) => (
+                      <>
+                      <ul
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className="w-2/6 h-full p-5 flex flex-col gap-3">
+                        {tasksCategory.tasks.map((task: any, index: number) => {
+                          return (
+                            <Draggable
+                              key={task._id}
+                              draggableId={task._id}
+                              index={index}>
+                              {(provided) => (
+                                <li
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  ref={provided.innerRef}
+                                  className={clsx(
+                                    "w-full h-28 border rounded-2xl p-5 relative group",
+                                    {
+                                      "bg-amber-100":
+                                        tasksCategory.status === "ongoing",
+                                      "bg-primary/20":
+                                        tasksCategory.status === "done",
+                                    }
+                                  )}>
+                                  <div>{task.name}</div>
+                                  <Button isIconOnly className="absolute bottom-2 right-2 bg-transparent hover:bg-black/5 opacity-0 group-hover:opacity-100 hover:text-red-400 duration-300 text-zinc-500" radius="sm" size="sm" onClick={()=>{taskRemove(tasksCategory.status, task._id)}}>
+                                    <svg
+                                      className="size-5 "
+                                      fill="currentColor"
+                                      viewBox="0 0 16 16">
+                                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                    </svg>
+                                  </Button>
+                                </li>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        {provided.placeholder}
+                      </ul>
+                      {index < 2 && <Image src="/assets/divider.svg" alt="alt" width={5} height={5} />}
+                      </>
+                    )}
+                  </Droppable>
+                );
+              })
+            : null}
+        </div>
+        <div className="w-full h-2/5 absolute bottom-0 bg-gradient-to-t from-white z-50 rounded-b-3xl pointer-events-none flex gap-[calc(100%/3-2rem)] items-end justify-center pb-10">
+          <div className="size-8 rounded-full bg-zinc-400 grid place-content-center">
+            <svg
+              className="size-6 text-white"
+              fill="currentColor"
+              viewBox="0 0 16 16">
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z" />
+            </svg>
+          </div>
+          <div className="size-8 rounded-full bg-amber-500 grid place-content-center">
+            <svg
+              className="size-5 text-white"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16">
+              <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
+            </svg>
+          </div>
+          <div className="size-8 rounded-full bg-primary grid place-content-center">
+            <svg
+              fill="currentColor"
+              className="size-6 text-white"
+              viewBox="0 0 16 16">
+              <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+            </svg>
+          </div>
+        </div>
+        <Image
+          src="/assets/zigzag.svg"
+          alt="alt"
+          width={35}
+          height={35}
+          className="absolute -left-5 bottom-16 z-50"
         />
-        <Button
-          className="absolute right-5 bg-secondary w-20"
-          isIconOnly
-          onClick={addTaskButton}>
-          <svg
-            fill="currentColor"
-            viewBox="0 0 16 16"
-            className="text-white size-8">
-            <path
-              fillRule="evenodd"
-              d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-              />
-          </svg>
-        </Button>
-      </div>
-      {tasks.length ? (
-        <div className="w-full h-[calc(100%-4rem)] overflow-y-auto">
-          {/* Tasks list */}
-          <ul className="flex flex-col w-full p-5 gap-2">
-            {tasks.map(
-              (task: TaskType, key: number) =>
-                !task.completed && (
-                  <Task
-                    key={key}
-                    task={task}
-                    setTaskCompleted={setTaskCompleted}></Task>
-                  )
-                )}
-          </ul>
-          {/* Completed tasks */}
-          {isTaskCompleted && (
-            <div className="flex justify-center">
-              <Image
-                src="/assets/good.png"
-                alt="alt"
-                width={70}
-                height={70}
-                className="text-center"
-                />
-            </div>
-          )}
-          <ul className="flex flex-col w-full p-5 gap-2">
-            {tasks.map(
-              (task: TaskType, key: number) =>
-                task.completed && (
-                  <Task
-                  key={key}
-                  task={task}
-                  setTaskCompleted={setTaskCompleted}></Task>
-                )
-            )}
-          </ul>
-        </div>
-      ) : (
-        <div className="w-full h-full flex flex-col justify-center items-center gap-5">
-          <Image src="/assets/excited.png" alt="alt" width={125} height={125} />
-          <h1 className="text-xl text-gray-800">What will you do today?</h1>
-        </div>
-      )}
-      {/*  Confetti */}
-      {taskCompleted && (
-        <div className="fixed top-0 right-0 left-0 bottom-0 flex items-center justify-center z-10 bg-black/50 ">
+        <div className="w-fit h-12 flex absolute -top-6 left-4 px-12 items-center justify-center -rotate-3">
+          <Image src="/assets/banner.svg" alt="alt" fill />
           <Image
-            src="/assets/gg.png"
+            src="/assets/good.png"
             alt="alt"
-            width={500}
-            height={500}
-            className=""
-            />
-          <Image src="/assets/confetti.gif" alt="alt" fill id="confetti" />
-          <audio src="/assets/gg_sfx.mp3" autoPlay></audio>
+            width={60}
+            height={60}
+            className="absolute top-0 -right-7 rotate-12"
+          />
+          <p className="relative text-white text-2xl">Daily Overview</p>
         </div>
-      )}
-    </section>
-    <div className="w-2/5 flex-auto relative">
-    <Image
-          src="/assets/flower_1.svg"
-          alt="alt"
-          width={150}
-          height={150}
-          className="absolute -left-32 bottom-0"
-        />
-        <Image
-          src="/assets/flower_2.svg"
-          alt="alt"
-          width={180}
-          height={180}
-          className="absolute -right-32 bottom-0"
-        />
-        <Image
-          src="/assets/sleeping.png"
-          alt="alt"
-          width={120}
-          height={120}
-          className="absolute -right-10 bottom-0"
-        />
-        <Image
-          src="/assets/zzz.gif"
-          alt="alt"
-          width={80}
-          height={80}
-          className="absolute -right-0 bottom-16"
-        />
-    </div>
-      </>
+      </section>
+    </DragDropContext>
   );
 };
 

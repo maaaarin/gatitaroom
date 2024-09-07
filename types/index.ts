@@ -1,5 +1,10 @@
 export type Task = {
-    _id?: string | undefined;
-    name: string;
-    completed?: boolean;
-}
+  _id?: string;
+  name: string;
+  type: string;
+};
+
+export type TaskStatus = {
+  status: string;
+  tasks: Task[];
+};

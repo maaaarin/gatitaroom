@@ -10,9 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#AEE7FF",
-        secondary: "#45C3F9",
+        primary: "#F467E6",
+        secondary: "#3534FF",
       },
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '100%': '100% 100%',
+      }
     },
   },
   darkMode: "class",

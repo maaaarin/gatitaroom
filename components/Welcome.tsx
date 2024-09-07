@@ -17,14 +17,14 @@ const Welcome = () => {
     <>
       <div
         className={clsx(
-          "w-screen h-screen bg-black fixed z-40 pointer-events-none",
+          "w-screen h-screen bg-black fixed z-50 pointer-events-none top-0 left-0",
           {
             test: entered,
           }
         )}></div>
       <div
         className={clsx(
-          "w-full h-screen flex flex-col items-center justify-center z-50 fixed gap-3",
+          "w-full h-screen flex flex-col items-center justify-center z-50 fixed gap-3 top-0 left-0",
           {
             hidden: entered,
           }
@@ -41,10 +41,11 @@ const Welcome = () => {
         </div>
         {/* <input type="text" className="w-36 h-10 rounded-full text-center outline-none border-none" placeholder="Password! Grrr"/> */}
         <Button
-          className="w-36 bg-primary rounded-full text-xl"
+          className="w-36 bg-secondary rounded-full text-xl text-white"
           onClick={enteredClick}>
           Enter Room
         </Button>
+        <span className="text-primary">New update!</span>
       </div>
     </>
   );
