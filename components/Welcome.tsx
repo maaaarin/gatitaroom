@@ -8,7 +8,7 @@ const Welcome = () => {
   const [entered, setEntered] = React.useState(false);
 
   function enteredClick(){
-    const audio = new Audio("/assets/welcome_sfx.mp3");
+    const audio = new Audio("/assets/audio/spooky_sfx.mp3");
     setEntered(true)
     audio.play();
   }
@@ -35,17 +35,18 @@ const Welcome = () => {
             alt="alt"
             width={250}
             height={250}
-            className="absolute -top-[120%] -right-44"
+            className="absolute -top-[90%] -right-44"
           />
-          <Image src="/assets/gatito.png" alt="alt" width={100} height={100} />
+          <Image src="/assets/cat_pumpkins.svg" alt="alt" width={130} height={100} />
         </div>
         {/* <input type="text" className="w-36 h-10 rounded-full text-center outline-none border-none" placeholder="Password! Grrr"/> */}
         <Button
-          className="w-36 bg-secondary rounded-full text-xl text-white"
+          className="w-36 bg-primary rounded-full text-xl text-white mb-2"
           onClick={enteredClick}>
           Enter Room
         </Button>
-        <span className="text-primary">New update!</span>
+        {/* <span className="text-primary">Halloween update!</span> */}
+        <Image src="/assets/halloween_text.svg" alt="alt" width={150} height={0} />
       </div>
     </>
   );

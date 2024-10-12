@@ -60,7 +60,7 @@ const TaskInput = () => {
   }, [taskInput]);
 
   return (
-    <section className="w-full min-h-14 flex items-center justify-center mb-4">
+    <section className="w-full min-h-14 flex items-center justify-center mb-4 z-50">
       <div className="w-2/5 h-full flex items-center relative border-secondary border-2 rounded-full">
         <input
           type="text"
@@ -121,7 +121,7 @@ const TaskInput = () => {
           /> */}
           <Button
             isIconOnly
-            className="bg-secondary"
+            className="bg-primary"
             radius="full"
             size="md"
             onClick={addTaskButton}>

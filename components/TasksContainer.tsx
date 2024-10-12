@@ -91,7 +91,7 @@ const TasksContainer = ({ tasksInit }: { tasksInit: TaskStatus[] }) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <section className="w-3/4 h-auto bg-white rounded-3xl border-secondary border-2 flex pt-5 relative ">
+      <section className="w-full h-full bg-white rounded-3xl border-secondary border-2 flex pt-5 relative ">
         {/* Tasks */}
         <div className="size-full flex overflow-y-auto">
           {isBrowser
@@ -184,19 +184,22 @@ const TasksContainer = ({ tasksInit }: { tasksInit: TaskStatus[] }) => {
           alt="alt"
           width={35}
           height={35}
-          className="absolute -left-5 bottom-16 z-50"
+          className="absolute -right-5 bottom-48 z-50"
         />
-        <div className="w-fit h-12 flex absolute -top-6 left-4 px-12 items-center justify-center -rotate-3">
-          <Image src="/assets/banner.svg" alt="alt" fill />
-          <Image
-            src="/assets/good.png"
-            alt="alt"
-            width={60}
-            height={60}
-            className="absolute top-0 -right-7 rotate-12"
-          />
-          <p className="relative text-white text-2xl">Daily Overview</p>
-        </div>
+        <Image
+          src="/assets/ghost.svg"
+          alt="alt"
+          width={100}
+          height={100}
+          className="absolute -right-8 -bottom-4 z-50"
+        />
+        <Image
+          src="/assets/cat_halloween.svg"
+          alt="alt"
+          width={140}
+          height={140}
+          className="absolute -left-12 -bottom-4 z-50"
+        />
       </section>
     </DragDropContext>
   );
