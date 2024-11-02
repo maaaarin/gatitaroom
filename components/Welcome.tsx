@@ -4,12 +4,16 @@ import React from "react";
 import { Button } from "@nextui-org/react";
 import { clsx } from "clsx";
 
-const Welcome = () => {
-  const [entered, setEntered] = React.useState(false);
+type Props = {
+  hasEntered: boolean,
+  setHasEntered: React.Dispatch<React.SetStateAction<boolean>>,
+}
 
-  function enteredClick(){
-    const audio = new Audio("/assets/audio/spooky_sfx.mp3");
-    setEntered(true)
+const Welcome = ({ hasEntered, setHasEntered }: Props) => {
+
+  function handleEnter() {
+    const audio = new Audio("/assets/audio/entrance.mp3");
+    setHasEntered(true)
     audio.play();
   }
 
@@ -19,14 +23,14 @@ const Welcome = () => {
         className={clsx(
           "w-screen h-screen bg-black fixed z-50 pointer-events-none top-0 left-0",
           {
-            test: entered,
+            test: hasEntered,
           }
         )}></div>
       <div
         className={clsx(
           "w-full h-screen flex flex-col items-center justify-center z-50 fixed gap-3 top-0 left-0",
           {
-            hidden: entered,
+            hidden: hasEntered,
           }
         )}>
         <div className="w-60 flex items-center justify-center relative">
@@ -35,18 +39,18 @@ const Welcome = () => {
             alt="alt"
             width={250}
             height={250}
-            className="absolute -top-[90%] -right-44"
+            className="absolute -top-[70%] -right-44"
           />
-          <Image src="/assets/cat_pumpkins.svg" alt="alt" width={130} height={100} />
+          <Image src="/assets/cat/flowers.svg" alt="alt" width={130} height={100} />
         </div>
         {/* <input type="text" className="w-36 h-10 rounded-full text-center outline-none border-none" placeholder="Password! Grrr"/> */}
         <Button
-          className="w-36 bg-primary rounded-full text-xl text-white mb-2"
-          onClick={enteredClick}>
+          className="w-36 bg-primary rounded-full text-xl text-white mb-1"
+          onClick={handleEnter}>
           Enter Room
         </Button>
-        {/* <span className="text-primary">Halloween update!</span> */}
-        <Image src="/assets/halloween_text.svg" alt="alt" width={150} height={0} />
+        <span className="text-secondary">Special update!</span>
+        {/* <Image src="/assets/halloween_text.svg" alt="alt" width={150} height={0} /> */}
       </div>
     </>
   );

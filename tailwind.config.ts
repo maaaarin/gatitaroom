@@ -10,8 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#3534FF",
-        secondary: "#486EF6",
+        primary: "#3C1F5C",
+        secondary: "#C9A9E9",
       },
       backgroundSize: {
         'auto': 'auto',
