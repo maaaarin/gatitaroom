@@ -10,6 +10,8 @@ export type Event = {
   _id?: string | undefined;
   name: string;
   date: Date;
+  color: string;
+  sticker: string;
 };
 
 export type State = {

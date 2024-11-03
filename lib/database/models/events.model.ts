@@ -10,6 +10,12 @@ const eventSchema = new Schema({
     required: true,
     index: { expires: 0 }
   },
+  color: {
+    type: String,
+  },
+  sticker: {
+    type: String,
+  },
 });
 
 export default models.Events || model('Events', eventSchema);
