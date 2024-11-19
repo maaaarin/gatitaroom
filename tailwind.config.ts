@@ -12,6 +12,7 @@ const config: Config = {
       colors: {
         primary: "#3C1F5C",
         secondary: "#C9A9E9",
+        "primary-dark": "#1D112A"
       },
       backgroundSize: {
         'auto': 'auto',

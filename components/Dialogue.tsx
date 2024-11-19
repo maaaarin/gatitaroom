@@ -5,115 +5,58 @@ import 'animate.css';
 import { Interaction } from '@/types';
 import { updateCurrentDialogue } from '@/lib/actions/interactions.action';
 
-  // const dialogues = [
-  //   {
-  //     text: "Bonjour Gatita! It's me, your Marinito, but in an alternative version as a cat.",
-  //     image: "/assets/cat/hello.svg",
-  //     audio: ["meow_1"]
-  //   },
-  //   {
-  //     text: "Sorry for not introducing myself before. I want to show you your new room!",
-  //     image: "/assets/cat/worried.svg",
-  //   },
-  //   {
-  //     text: "Now there will only be two statuses for your tasks.",
-  //     image: "/assets/cat/party.svg",
-  //   },
-  //   {
-  //     text: "And there's something else! Now there are events!",
-  //     image: "/assets/cat/cheers.svg",
-  //     audio: ["meow_3"]
-  //   },
-  //   {
-  //     text: "Yes! You can add events for specific dates.",
-  //     image: "/assets/cat/calendar.svg",
-  //   },
-  //   {
-  //     text: "You can select a date from the calendar and add an event.",
-  //     image: "/assets/cat/angel.svg",
-  //   },
-  //   {
-  //     text: "You can view all scheduled events for that same day.",
-  //     image: "/assets/cat/study.svg",
-  //   },
-  //   {
-  //     text: "And well, now I want to tell you something important.",
-  //     image: "/assets/cat/roses.svg",
-  //   },
-  //   {
-  //     text: "Happy birthday!",
-  //     image: "/assets/cat/surprise.svg",
-  //     audio: ["horn"]
-  //   },
-  //   {
-  //     text: "A little late, I know...",
-  //     image: "/assets/cat/depressed.svg",
-  //     audio: ["meow_4"]
-  //   },
-  //   {
-  //     text: "Sorry for taking so long; I know it's been disappointing.",
-  //     image: "/assets/cat/cry.svg",
-  //     audio: ["meow_sad"]
-  //   },
-  //   {
-  //     text: "I want to apologize for that and tell you a few things.",
-  //     image: "/assets/cat/sad.svg",
-  //     audio: ["meow_2"]
-  //   },
-  //   {
-  //     text: "Thank you for being with me; I'm so glad I found you.",
-  //     image: "/assets/cat/cute.svg",
-  //   },
-  //   {
-  //     text: "You've made me happy countless times, relieving my loneliness.",
-  //     image: "/assets/cat/heart.svg",
-  //   },
-  //   {
-  //     text: "I feel very lucky to have you in my life.",
-  //     image: "/assets/cat/happy.svg",
-  //   },
-  //   {
-  //     text: "I'm not perfect, but I keep trying to be better.",
-  //     image: "/assets/cat/sad.svg",
-  //   },
-  //   {
-  //     text: "Thanks again for being here with me.",
-  //     image: "/assets/cat/heart_hand.svg",
-  //     audio: ["meow_1"]
-  //   },
-  //   {
-  //     text: "I can’t believe I ended up with such a beautiful girl!",
-  //     image: "/assets/cat/in_love.svg",
-  //   },
-  //   {
-  //     text: "You are very strong; things have not been easy for you.",
-  //     image: "/assets/cat/roses.svg",
-  //   },
-  //   {
-  //     text: "But you still don't give up, and I want you to keep going.",
-  //     image: "/assets/cat/cheers.svg",
-  //   },
-  //   {
-  //     text: "That's why I built this site to help you out.",
-  //     image: "/assets/cat/worried.svg",
-  //   },
-  //   {
-  //     text: "I'll be here to support you; you'll never be alone.",
-  //     image: "/assets/cat/together.svg",
-  //   },
-  //   {
-  //     text: "I love you so much, petit chat.",
-  //     image: "/assets/cat/kiss_you.svg",
-  //   },
-  //   {
-  //     text: " Now that's it! Enjoy your new room! ",
-  //     image: "/assets/cat/flowers.svg",
-  //   },
-  //   {
-  //     text: "We'll see each other again!",
-  //     image: "/assets/cat/hello.svg",
-  //   },
-  // ];
+// const dialogue = {
+//   name: "groceries",
+//   dialogues: [
+//     {
+//       text: "Gata! It's me again! I'm back!",
+//       image: "/assets/cat/nature.svg",
+//       audio: ["meow_1"]
+//     },
+//     {
+//       text: "This time I want to show you something new!",
+//       image: "/assets/cat/happy.svg",
+//       audio: []
+//     },
+//     {
+//       text: "You can finally prepare yourself better for groceries!",
+//       image: "/assets/cat/groceries.svg",
+//       audio: []
+//     },
+//     {
+//       text: "Yes! You heard correctly! Groceries!",
+//       image: "/assets/cat/angel.svg",
+//       audio: ["meow_2"]
+//     },
+//     {
+//       text: "Now you can create lists, and you will never forget what you need!",
+//       image: "/assets/cat/groceries_2.svg",
+//       audio: []
+//     },
+//     {
+//       text: "Great, isn't it?",
+//       image: "/assets/cat/worried.svg",
+//       audio: ["meow_4"]
+//     },
+//     {
+//       text: "Well, I just wanted to show you this. Now I have to go.",
+//       image: "/assets/cat/cute.svg",
+//       audio: []
+//     },
+//     {
+//       text: "Keep working hard, and remember this:",
+//       image: "/assets/cat/normal.svg",
+//       audio: []
+//     },
+//     {
+//       text: "I love you.",
+//       image: "/assets/cat/kiss_heart.svg",
+//       audio: ["meow_2"]
+//     },
+//   ],
+//   currentDialogueIndex: 0,
+//   isFinished: false
+// }
 
 const audioList = [
   {
@@ -152,8 +95,13 @@ const audioList = [
     type: "sound"
   },
   {
-    name: "background_music",
-    root: "/assets/audio/background_music.mp3",
+    name: "birthday",
+    root: "/assets/audio/birthday/background_music.mp3",
+    type: "music"
+  },
+  {
+    name: "groceries",
+    root: "/assets/audio/groceries/background_music.mp3",
     type: "music"
   }
 ];
@@ -167,6 +115,7 @@ const Dialogue = ({interactions}: Props) => {
   const audioMap = useRef<{ [key: string]: HTMLAudioElement }>({});
   const backgroundMusic = useRef<HTMLAudioElement | null>(null);
 
+  // const [interaction, setInteraction] = useState<Interaction>(interactions[0]);
   const [interaction, setInteraction] = useState<Interaction>(interactions[0]);
 
   useEffect(() => {
@@ -176,7 +125,7 @@ const Dialogue = ({interactions}: Props) => {
       const newAudio = new Audio(audio.root);
       newAudio.loop = audio.type === "music";
       audioMap.current[audio.name] = new Audio(audio.root);
-      if (audio.name === "background_music") {
+      if (audio.name === interaction.name) {
         backgroundMusic.current = newAudio;
       }
     });
@@ -214,8 +163,10 @@ const Dialogue = ({interactions}: Props) => {
   const [canProceed, setCanProceed] = React.useState(false);
 
   React.useEffect(() => {
-    setCurrentDialogue(interactions[0].dialogues[currentDialogueIndex])
-    setCanProceed(false);
+    if(interaction != null) {
+      setCurrentDialogue(interaction.dialogues[currentDialogueIndex])
+      setCanProceed(false);
+    }
 
     const timer = setTimeout(() => {
       setCanProceed(true);
@@ -225,10 +176,9 @@ const Dialogue = ({interactions}: Props) => {
   }, [currentDialogueIndex]);
 
   useEffect(() => {
-    
     // Stop previous audio
     if (currentDialogueIndex != 0) {
-      let previousDialogue = interactions[0].dialogues[currentDialogueIndex - 1];
+      let previousDialogue = interaction.dialogues[currentDialogueIndex - 1];
       if (previousDialogue.audio) {
         previousDialogue.audio.forEach(audio => {
           audioMap.current[audio].pause();
@@ -252,13 +202,13 @@ const Dialogue = ({interactions}: Props) => {
   const handleNextDialogue = async () => {
     if (canProceed) {
       playAudio("skip_dialogue");
-      if (currentDialogueIndex < interactions[0].dialogues.length - 1) {
+      if (currentDialogueIndex < interaction.dialogues.length - 1) {
         setCurrentDialogueIndex(currentDialogueIndex + 1);
       } else {
         setIsFinished(true);
         backgroundMusic.current?.pause();
       }
-      await updateCurrentDialogue(currentDialogueIndex + 1, interactions[0]._id!);
+      await updateCurrentDialogue(currentDialogueIndex + 1, interaction._id!);
     }
   };
 

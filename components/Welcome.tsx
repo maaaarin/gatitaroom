@@ -41,7 +41,7 @@ const Welcome = ({ hasEntered, setHasEntered }: Props) => {
             height={250}
             className="absolute -top-[70%] -right-44"
           />
-          <Image src="/assets/cat/flowers.svg" alt="alt" width={130} height={100} />
+          <Image src="/assets/cat/groceries.svg" alt="alt" width={130} height={100} />
         </div>
         {/* <input type="text" className="w-36 h-10 rounded-full text-center outline-none border-none" placeholder="Password! Grrr"/> */}
         <Button
@@ -49,7 +49,7 @@ const Welcome = ({ hasEntered, setHasEntered }: Props) => {
           onClick={handleEnter}>
           Enter Room
         </Button>
-        <span className="text-secondary">Special update!</span>
+        <span className="text-secondary">Groceries update!</span>
         {/* <Image src="/assets/halloween_text.svg" alt="alt" width={150} height={0} /> */}
       </div>
     </>

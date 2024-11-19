@@ -21,15 +21,26 @@ export type State = {
 
 export type Dialogue = {
   text: string;
-  type: 'audio' | 'music';
   image: string;
   audio: string[];
-}
+};
 
 export type Interaction = {
   _id?: string | undefined;
   name: string;
-  dialogues: Dialogue[]; 
-  currentDialogueIndex: number; 
-  isFinished: boolean; 
-}
+  dialogues: Dialogue[];
+  currentDialogueIndex: number;
+  isFinished: boolean;
+};
+
+export type Grocery = {
+  _id?: string | undefined;
+  name: string;
+  amount: number;
+};
+
+export type GroceryList = {
+  _id?: string | undefined;
+  name: string;
+  items: Grocery[];
+};

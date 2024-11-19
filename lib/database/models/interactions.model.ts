@@ -11,11 +11,6 @@ const interactionSchema = new Schema({
                 type: String,
                 required: true,
             },
-            type: {
-                type: String,
-                enum: ['audio', 'music'],
-                required: true,
-            },
             image: {
                 type: String,
                 required: true,
